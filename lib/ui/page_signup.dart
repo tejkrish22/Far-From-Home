@@ -27,9 +27,9 @@ class _SignUpPageState extends State<SignUpPage> {
   Screen size;
 
   final DocumentReference documentReference =
-  FirebaseFirestore.instance.collection("User").doc();
+      FirebaseFirestore.instance.collection("User").doc();
 
-    // adding data to fire store
+  // adding data to fire store
 
   void _add() {
     Map<String, dynamic> data = <String, dynamic>{
@@ -37,14 +37,15 @@ class _SignUpPageState extends State<SignUpPage> {
       "lastName": _lname,
       "mobileNo": _phoneNo,
       "email": _email,
-      "uid" : _uid,
-      "status" : true,
-      "Date Created" : DateTime.now(),
+      "uid": _uid,
+      "status": true,
+      "Date Created": DateTime.now(),
     };
     documentReference.set(data).whenComplete(() {
       print("Data added");
     }).catchError((e) => print(e));
   }
+
   bool validateAndSave() {
     final form = _formKey.currentState;
 
@@ -57,45 +58,47 @@ class _SignUpPageState extends State<SignUpPage> {
 
   void validateAndSubmit() async {
     FocusScope.of(context).requestFocus(new FocusNode());
-    if(validateAndSave()){
-      try{
-        UserCredential user= await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password);
+    if (validateAndSave()) {
+      try {
+        UserCredential user = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(email: _email, password: _password);
         print("signed in  ${user.user.uid}");
         _uid = user.user.uid;
         try {
           LocalStorage.sharedInstance
-            .setAuthStatus(key: Constants.isLoggedIn, value: "true");
+              .setAuthStatus(key: Constants.isLoggedIn, value: "true");
         } catch (e) {
           print("An error occured while trying to send email verification");
         }
         _add();
-        FirebaseFirestore.instance.collection('User').where('uid', isEqualTo: _uid)
-          .snapshots().listen(
-                (data) {
-                  print('Docfound :  ${data.docs[0].id}');
-                  LocalStorage.sharedInstance.setUserRef(key: Constants.userRef,value: data.docs[0].id);
-                }
-        );
+        FirebaseFirestore.instance
+            .collection('User')
+            .where('uid', isEqualTo: _uid)
+            .snapshots()
+            .listen((data) {
+          print('Docfound :  ${data.docs[0].id}');
+          LocalStorage.sharedInstance
+              .setUserRef(key: Constants.userRef, value: data.docs[0].id);
+        });
         Fluttertoast.showToast(msg: "Account Resgistered Successfully");
-        FirebaseFirestore.instance.collection('User').where('uid', isEqualTo: user.user.uid)
-          .snapshots().listen(
-                (data) {
-                  print('Docfound :  ${data.docs[0].id}');
-                  LocalStorage.sharedInstance.setUserRef(key: Constants.userRef,value: data.docs[0].id.toString());
-                }
-          );
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => SearchPage()));
-
-
-      }
-      catch(e){
+        FirebaseFirestore.instance
+            .collection('User')
+            .where('uid', isEqualTo: user.user.uid)
+            .snapshots()
+            .listen((data) {
+          print('Docfound :  ${data.docs[0].id}');
+          LocalStorage.sharedInstance.setUserRef(
+              key: Constants.userRef, value: data.docs[0].id.toString());
+        });
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => SearchPage()));
+      } catch (e) {
         //print("error : $e");
         Fluttertoast.showToast(msg: e.code);
       }
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
@@ -137,19 +140,18 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: Container(
                     child: Column(
                       children: <Widget>[
-                         Center(
-                            child:Container(
-                              padding: EdgeInsets.only(top: size.getWidthPx(10)),
-                              child: Text(
-                                "Far From Home",
-                                style: TextStyle(
+                        Center(
+                          child: Container(
+                            padding: EdgeInsets.only(top: size.getWidthPx(10)),
+                            child: Text(
+                              "Far From Home",
+                              style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w700,
-                                  fontSize: size.getWidthPx(30)
-                                ),
-                              ),
+                                  fontSize: size.getWidthPx(30)),
                             ),
                           ),
+                        ),
                       ],
                     ),
                     width: double.infinity,
@@ -165,8 +167,11 @@ class _SignUpPageState extends State<SignUpPage> {
                       Icons.arrow_back,
                       color: Colors.white,
                     ),
-                    onPressed: () { 
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SearchPage()));
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SearchPage()));
                     },
                     //tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
                   ),
@@ -174,204 +179,210 @@ class _SignUpPageState extends State<SignUpPage> {
               ],
             ),
             SizedBox(
-                height: size.hp(2),
+              height: size.hp(2),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: size.wp(6)),
+              child: Material(
+                elevation: 2.0,
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                child: TextFormField(
+                  cursorColor: Colors.blue[900],
+                  decoration: InputDecoration(
+                      hintText: "First Name",
+                      prefixIcon: Material(
+                        elevation: 0,
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.blue[700],
+                        ),
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: size.wp(2.5), vertical: size.hp(2))),
+                  validator: (value) =>
+                      value.isEmpty ? "First Name can't be empty" : null,
+                  onSaved: (value) => _fname = value,
+                ),
               ),
-              Padding(
+            ),
+            SizedBox(
+              height: size.hp(2),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: size.wp(6)),
+              child: Material(
+                elevation: 2.0,
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                child: TextFormField(
+                  cursorColor: Colors.blue[900],
+                  decoration: InputDecoration(
+                      hintText: "Last Name",
+                      prefixIcon: Material(
+                        elevation: 0,
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.blue[700],
+                        ),
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: size.wp(2.5), vertical: size.hp(2))),
+                  validator: (value) =>
+                      value.isEmpty ? "Last Name can't be empty" : null,
+                  onSaved: (value) => _lname = value,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: size.hp(2),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: size.wp(6)),
+              child: Material(
+                elevation: 2.0,
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                child: TextFormField(
+                  keyboardType: TextInputType.phone,
+                  cursorColor: Colors.blue[900],
+                  decoration: InputDecoration(
+                      hintText: "Mobile Number",
+                      prefixText: "+91",
+                      prefixIcon: Material(
+                        elevation: 0,
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                        child: Icon(
+                          Icons.phone_android,
+                          color: Colors.blue[700],
+                        ),
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: size.wp(2.5), vertical: size.hp(2))),
+                  validator: (value) =>
+                      value.isEmpty ? "Mobile Number can't be empty" : null,
+                  onSaved: (value) => _phoneNo = "+91" + value,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: size.hp(2),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: size.wp(6)),
+              child: Material(
+                elevation: 2.0,
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                child: TextFormField(
+                  cursorColor: Colors.blue[900],
+                  decoration: InputDecoration(
+                      hintText: "Email",
+                      prefixIcon: Material(
+                        elevation: 0,
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                        child: Icon(
+                          Icons.email,
+                          color: Colors.blue[700],
+                        ),
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: size.wp(2.5), vertical: size.hp(2))),
+                  validator: (value) =>
+                      value.isEmpty ? "Email can't be empty" : null,
+                  onSaved: (value) => _email = value,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: size.hp(2),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: size.hp(3)),
+              child: Material(
+                elevation: 2.0,
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                child: TextFormField(
+                  obscureText: true,
+                  cursorColor: Colors.blue[800],
+                  decoration: InputDecoration(
+                      hintText: "Password",
+                      prefixIcon: Material(
+                        elevation: 0,
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                        child: Icon(
+                          Icons.lock,
+                          color: Colors.blue[700],
+                        ),
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: size.wp(2.5), vertical: size.hp(2))),
+                  validator: (value) =>
+                      value.isEmpty ? "Password can't be empty" : null,
+                  onSaved: (value) => _password = value,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: size.hp(3),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: size.hp(3)),
+              child: Material(
+                elevation: 2.0,
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                child: TextFormField(
+                  obscureText: true,
+                  cursorColor: Colors.blue[800],
+                  decoration: InputDecoration(
+                      hintText: "Confirm Password",
+                      prefixIcon: Material(
+                        elevation: 0,
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                        child: Icon(
+                          Icons.lock,
+                          color: Colors.blue[700],
+                        ),
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: size.wp(2.5), vertical: size.hp(2))),
+                  validator: (value) =>
+                      value.isEmpty ? "Confirm Password can't be empty" : null,
+                  onSaved: (value) => _password = value,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: size.hp(3),
+            ),
+            Padding(
                 padding: EdgeInsets.symmetric(horizontal: size.wp(6)),
-                child: Material(
-                  elevation: 2.0,
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
-                  child: TextFormField(
-                    cursorColor: Colors.blue[900],
-                    decoration: InputDecoration(
-                        hintText: "First Name",
-                        prefixIcon: Material(
-                          elevation: 0,
-                          borderRadius: BorderRadius.all(Radius.circular(30)),
-                          child: Icon(
-                            Icons.person,
-                            color: Colors.blue[700],
-                          ),
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: size.wp(2.5), vertical: size.hp(2))
-                    ),
-                    validator: (value)=> value.isEmpty?"First Name can't be empty":null,
-                    onSaved: (value) => _fname=value,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: size.hp(2),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: size.wp(6)),
-                child: Material(
-                  elevation: 2.0,
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
-                  child: TextFormField(
-                    cursorColor: Colors.blue[900],
-                    decoration: InputDecoration(
-                        hintText: "Last Name",
-                        prefixIcon: Material(
-                          elevation: 0,
-                          borderRadius: BorderRadius.all(Radius.circular(30)),
-                          child: Icon(
-                            Icons.person,
-                            color: Colors.blue[700],
-                          ),
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: size.wp(2.5), vertical: size.hp(2))
-                    ),
-                    validator: (value)=> value.isEmpty?"Last Name can't be empty":null,
-                    onSaved: (value) => _lname=value,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: size.hp(2),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: size.wp(6)),
-                child: Material(
-                  elevation: 2.0,
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
-                  child: TextFormField(
-                    keyboardType: TextInputType.phone,
-                    cursorColor: Colors.blue[900],
-                    decoration: InputDecoration(
-                        hintText: "Mobile Number",
-                        prefixText: "+91",
-                        prefixIcon: Material(
-                          elevation: 0,
-                          borderRadius: BorderRadius.all(Radius.circular(30)),
-                          child: Icon(
-                            Icons.phone_android,
-                            color: Colors.blue[700],
-                          ),
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: size.wp(2.5), vertical: size.hp(2))
-                    ),
-                    validator: (value)=> value.isEmpty?"Mobile Number can't be empty":null,
-                    onSaved: (value) => _phoneNo = "+91" + value,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: size.hp(2),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: size.wp(6)),
-                child: Material(
-                  elevation: 2.0,
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
-                  child: TextFormField(
-                    cursorColor: Colors.blue[900],
-                    decoration: InputDecoration(
-                        hintText: "Email",
-                        prefixIcon: Material(
-                          elevation: 0,
-                          borderRadius: BorderRadius.all(Radius.circular(30)),
-                          child: Icon(
-                            Icons.email,
-                            color: Colors.blue[700],
-                          ),
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: size.wp(2.5), vertical: size.hp(2))
-                    ),
-                    validator: (value)=> value.isEmpty?"Email can't be empty":null,
-                    onSaved: (value) => _email=value,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: size.hp(2),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: size.hp(3)),
-                child: Material(
-                  elevation: 2.0,
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
-                  child: TextFormField(
-                    obscureText: true,
-                    cursorColor: Colors.blue[800],
-                    decoration: InputDecoration(
-                        hintText: "Password",
-                        prefixIcon: Material(
-                          elevation: 0,
-                          borderRadius: BorderRadius.all(Radius.circular(30)),
-                          child: Icon(
-                            Icons.lock,
-                            color: Colors.blue[700],
-                          ),
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: size.wp(2.5), vertical: size.hp(2))
-                    ),
-                    validator: (value)=>value.isEmpty?"Password can't be empty":null,
-                    onSaved: (value) => _password=value,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: size.hp(3),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: size.hp(3)),
-                child: Material(
-                  elevation: 2.0,
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
-                  child: TextFormField(
-                    obscureText: true,
-                    cursorColor: Colors.blue[800],
-                    decoration: InputDecoration(
-                        hintText: "Confirm Password",
-                        prefixIcon: Material(
-                          elevation: 0,
-                          borderRadius: BorderRadius.all(Radius.circular(30)),
-                          child: Icon(
-                            Icons.lock,
-                            color: Colors.blue[700],
-                          ),
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: size.wp(2.5), vertical: size.hp(2))
-                    ),
-                    validator: (value)=>value.isEmpty?"Confirm Password can't be empty":null,
-                    onSaved: (value) => _password=value,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: size.hp(3),
-              ),
-              Padding(
-                  padding: EdgeInsets.symmetric(horizontal: size.wp(6)),
-                  child: Container(
+                child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(100)),
                         color: Color(0xff1976d2)),
-                    child: FlatButton(
+                    child: TextButton(
+                      onPressed: validateAndSubmit,
                       child: Text(
                         "Get Started",
                         style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: size.hp(3)),
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: size.hp(3),
+                        ),
                       ),
-                      onPressed: validateAndSubmit,
-                    ),
-                  )),
-              SizedBox(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                    ))),
+            SizedBox(
               height: size.hp(5),
             ),
             Row(
@@ -384,20 +395,21 @@ class _SignUpPageState extends State<SignUpPage> {
                       fontSize: size.hp(2),
                       fontWeight: FontWeight.normal),
                 ),
-                FlatButton(
-                  child: Text(
-                    "Login",
-                    style: TextStyle(
-                        color: Colors.blue[700],
-                        fontWeight: FontWeight.w500,
-                        fontSize: size.hp(2),
-                        decoration: TextDecoration.underline),
-                  ),
+                TextButton(
                   onPressed: () {
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => LoginPage()));
                   },
-                ),
+                  child: Text(
+                    "Login",
+                    style: TextStyle(
+                      color: Colors.blue[700],
+                      fontWeight: FontWeight.w500,
+                      fontSize: size.hp(2),
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                )
               ],
             ),
           ],

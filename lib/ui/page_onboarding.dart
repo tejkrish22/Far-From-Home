@@ -16,12 +16,15 @@ class OnBoardingPage extends StatefulWidget {
 class _OnBoardingPageState extends State<OnBoardingPage> {
   final _controller = PageController();
   bool leadingVisibility = false;
-  Screen  size;
-  
+  Screen size;
+
   final List<Widget> _pages = [
-    IntroPage("assets/onboard_1.png","Activity", "View activity collected by your fitness trackers and your other mobile apps! \n \n Data has never been more beautiful or easier to understand!"),
-    IntroPage("assets/onboard_2.png","PhotoFIT", "A new kind of fittness tracking! \n \n 100% free, because great heath should be accessible to all!"),
-    IntroPage("assets/onboard_3.png","PhotoLAPSE", "Your progress photos are being put to good use! \n \n The photoLAPSE feature allows you to view your result over custom time periods!"),
+    IntroPage("assets/onboard_1.png", "Activity",
+        "View activity collected by your fitness trackers and your other mobile apps! \n \n Data has never been more beautiful or easier to understand!"),
+    IntroPage("assets/onboard_2.png", "PhotoFIT",
+        "A new kind of fittness tracking! \n \n 100% free, because great heath should be accessible to all!"),
+    IntroPage("assets/onboard_3.png", "PhotoLAPSE",
+        "Your progress photos are being put to good use! \n \n The photoLAPSE feature allows you to view your result over custom time periods!"),
   ];
   int currentPageIndex = 0;
 
@@ -91,29 +94,46 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
               )),
           actions: <Widget>[
             Padding(
-              padding: EdgeInsets.only(top: size.getWidthPx(16), right:  size.getWidthPx(12), bottom: size.getWidthPx(12)),
-              child: RaisedButton(
-                child: Text(
-                  isLastPage ? 'DONE' : 'NEXT',
-                  style: TextStyle(fontFamily: 'Exo2',fontWeight: FontWeight.w500,fontSize: 14,color: Colors.grey.shade700),
-                ),
-                onPressed: isLastPage
-                    ? () async{
-                  // Last Page Done Click
+                padding: EdgeInsets.only(
+                    top: size.getWidthPx(16),
+                    right: size.getWidthPx(12),
+                    bottom: size.getWidthPx(12)),
+                child: ElevatedButton(
+                  onPressed: isLastPage
+                      ? () async {
+                          // Last Page Done Click
 
-                  LocalStorage.sharedInstance.writeValue(key:Constants.isOnBoard,value: "1");
+                          await LocalStorage.sharedInstance
+                              .writeValue(key: Constants.isOnBoard, value: "1");
 
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SplashScreen()));
-
-                } : () {
-                  _controller.animateToPage(currentPageIndex + 1,
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeIn);
-                },
-                shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(30.0)),
-              ),
-            )
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SplashScreen()),
+                          );
+                        }
+                      : () {
+                          _controller.animateToPage(
+                            currentPageIndex + 1,
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeIn,
+                          );
+                        },
+                  child: Text(
+                    isLastPage ? 'DONE' : 'NEXT',
+                    style: TextStyle(
+                      fontFamily: 'Exo2',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: Colors.grey.shade700,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                  ),
+                ))
           ],
         ),
       ),
@@ -123,21 +143,21 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   Positioned pageViewFillWidget() {
     return Positioned.fill(
         child: PageView.builder(
-          controller: _controller,
-          itemCount: _pages.length,
-          itemBuilder: (BuildContext context, int index) {
-            return _pages[index % _pages.length];
-          },
-          onPageChanged: (int p) {
-            setState(() {
-              currentPageIndex = p;
-              if (currentPageIndex == 0) {
-                leadingVisibility = false;
-              } else {
-                leadingVisibility = true;
-              }
-            });
-          },
-        ));
+      controller: _controller,
+      itemCount: _pages.length,
+      itemBuilder: (BuildContext context, int index) {
+        return _pages[index % _pages.length];
+      },
+      onPageChanged: (int p) {
+        setState(() {
+          currentPageIndex = p;
+          if (currentPageIndex == 0) {
+            leadingVisibility = false;
+          } else {
+            leadingVisibility = true;
+          }
+        });
+      },
+    ));
   }
 }

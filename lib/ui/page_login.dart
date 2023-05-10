@@ -31,6 +31,7 @@ class _LoginPageState extends State<LoginPage> {
       passwordVisible = !passwordVisible;
     });
   }
+
   //validate and submit code
   bool validateAndSave() {
     final form = _formKey.currentState;
@@ -52,13 +53,15 @@ class _LoginPageState extends State<LoginPage> {
         //print("signed in  ${user.user.uid}");
         LocalStorage.sharedInstance
             .setAuthStatus(key: Constants.isLoggedIn, value: "true");
-        FirebaseFirestore.instance.collection('User').where('uid', isEqualTo: user.user.uid)
-          .snapshots().listen(
-                (data) {
-                  print('Docfound :  ${data.docs[0].id}');
-                  LocalStorage.sharedInstance.setUserRef(key: Constants.userRef,value: data.docs[0].id.toString());
-                }
-        );
+        FirebaseFirestore.instance
+            .collection('User')
+            .where('uid', isEqualTo: user.user.uid)
+            .snapshots()
+            .listen((data) {
+          print('Docfound :  ${data.docs[0].id}');
+          LocalStorage.sharedInstance.setUserRef(
+              key: Constants.userRef, value: data.docs[0].id.toString());
+        });
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => SearchPage()));
       } catch (e) {
@@ -76,26 +79,23 @@ class _LoginPageState extends State<LoginPage> {
 
   //Login with google
 
-  void loginWithGoogle() async{
+  void loginWithGoogle() async {
     try {
       GoogleSignIn googleSignIn = GoogleSignIn();
       GoogleSignInAccount account = await googleSignIn.signIn();
-      if(account == null )
-        print("Error while login with google  line : 83 ");
-       UserCredential res = await FirebaseAuth.instance.signInWithCredential(GoogleAuthProvider.credential(
+      if (account == null) print("Error while login with google  line : 83 ");
+      UserCredential res = await FirebaseAuth.instance
+          .signInWithCredential(GoogleAuthProvider.credential(
         idToken: (await account.authentication).idToken,
         accessToken: (await account.authentication).accessToken,
       ));
-      if(res.user == null)
-        print("Error While login with google line 90");
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => SearchPage()));
+      if (res.user == null) print("Error While login with google line 90");
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => SearchPage()));
     } catch (e) {
       print("Error logging with google in catch line 91 $e");
-
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -240,7 +240,9 @@ class _LoginPageState extends State<LoginPage> {
                       suffixIcon: IconButton(
                         icon: Icon(
                           // Based on passwordVisible state choose the icon
-                          passwordVisible ? Icons.visibility : Icons.visibility_off,
+                          passwordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                           color: Colors.grey,
                         ),
                         onPressed: _togglePasswordVisibility,
@@ -259,38 +261,40 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
                 padding: EdgeInsets.symmetric(horizontal: size.wp(6)),
                 child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(100)),
-                      color: Color(0xff1976d2)),
-                  child: FlatButton(
-                    child: Text(
-                      "Login",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: size.hp(3)),
-                    ),
-                    onPressed: validateAndSubmit,
-                  ),
-                )),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(100)),
+                        color: Color(0xff1976d2)),
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                          backgroundColor:
+                              Colors.blue, // set the background color
+                          textStyle: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                              fontSize: size.hp(3))),
+                      onPressed: validateAndSubmit,
+                      child: Text('Login'),
+                    ))),
             SizedBox(
               height: size.hp(0.8),
             ),
             Center(
-              child: FlatButton(
-                onPressed: (){
-                  Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => ForgotPasswordPage()));
-                },
-                child: Text(
-                  "FORGOT PASSWORD ?",
-                  style: TextStyle(
-                      color: Colors.blue[700],
-                      fontSize: size.hp(1.8),
-                      fontWeight: FontWeight.w700),
+                child: TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
+                );
+              },
+              child: Text(
+                "FORGOT PASSWORD ?",
+                style: TextStyle(
+                  color: Colors.blue[700],
+                  fontSize: size.hp(1.8),
+                  fontWeight: FontWeight.w700,
                 ),
               ),
-            ),
+            )),
             SizedBox(
               height: size.hp(1),
             ),
@@ -308,38 +312,42 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Center(
               child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: size.wp(7)),
-                  child: Container(
-                    width: size.wp(90),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(100)),
-                        color: Color(0xffffffff)),
-                    child: RaisedButton(
+                padding: EdgeInsets.symmetric(horizontal: size.wp(7)),
+                child: Container(
+                  width: size.wp(90),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(100)),
+                      color: Color(0xffffffff)),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(50.0),
+                        borderRadius: BorderRadius.circular(50.0),
                       ),
-                      padding: new EdgeInsets.symmetric(horizontal: size.hp(7.5),vertical: size.wp(2.5)),
-                      color: Colors.white,
-                      child: Row(
-                        children: <Widget>[
-                          Image.asset(
-                            'assets/icngmail.png',
-                            width: size.wp(8),
-                          ),
-                          SizedBox(
-                            width: size.wp(2),
-                          ),
-                          Text(
-                            'Sign in with Google',
-                            style: TextStyle(
-                              fontSize: size.hp(2)
-                            ),
-                          ),
-                        ],
+                      backgroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: size.hp(7.5),
+                        vertical: size.wp(2.5),
                       ),
-                      onPressed: () {},
                     ),
-                  )),
+                    onPressed: () {},
+                    child: Row(
+                      children: <Widget>[
+                        Image.asset(
+                          'assets/icngmail.png',
+                          width: size.wp(8),
+                        ),
+                        SizedBox(
+                          width: size.wp(2),
+                        ),
+                        Text(
+                          'Sign in with Google',
+                          style: TextStyle(fontSize: size.hp(2)),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ),
             SizedBox(
               height: size.hp(2.6),
@@ -354,20 +362,23 @@ class _LoginPageState extends State<LoginPage> {
                       fontSize: size.hp(2),
                       fontWeight: FontWeight.normal),
                 ),
-                FlatButton(
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignUpPage()),
+                    );
+                  },
                   child: Text(
                     "Sign Up",
                     style: TextStyle(
-                        color: Colors.blue[700],
-                        fontWeight: FontWeight.w500,
-                        fontSize: size.hp(2),
-                        decoration: TextDecoration.underline),
+                      color: Colors.blue[700],
+                      fontWeight: FontWeight.w500,
+                      fontSize: size.hp(2),
+                      decoration: TextDecoration.underline,
+                    ),
                   ),
-                  onPressed: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => SignUpPage()));
-                  },
-                ),
+                )
               ],
             )
           ],

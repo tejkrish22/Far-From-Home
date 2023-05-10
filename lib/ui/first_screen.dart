@@ -20,7 +20,7 @@ class FirstScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         actions: <Widget>[
-          FlatButton.icon(
+          TextButton.icon(
             label: Text(
               'Skip',
               style: TextStyle(
@@ -32,35 +32,32 @@ class FirstScreen extends StatelessWidget {
               Icons.close,
             ),
             onPressed: () {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SearchPage()));
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => SearchPage()));
             },
           ),
         ],
       ),
-      body: ListView(
-        children: <Widget>[
-          Container(
+      body: ListView(children: <Widget>[
+        Container(
           color: Colors.white,
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(top: size.hp(7)),
-                  child: Text(
-                  'Redefining Your Home',
-                    style: new TextStyle(
-                      fontSize: size.getWidthPx(20),
-                      fontStyle: FontStyle.normal,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0x991976d2),
-                    )
-                  )
-                ),
+                    padding: EdgeInsets.only(top: size.hp(7)),
+                    child: Text('Redefining Your Home',
+                        style: new TextStyle(
+                          fontSize: size.getWidthPx(20),
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0x991976d2),
+                        ))),
                 Padding(
                   padding: EdgeInsets.only(bottom: size.hp(2)),
                   child: Text(
-                  'Search Experience',
+                    'Search Experience',
                     style: new TextStyle(
                       fontSize: size.getWidthPx(20),
                       fontStyle: FontStyle.normal,
@@ -81,34 +78,47 @@ class FirstScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: size.getWidthPx(30)),
-                  child: RaisedButton(
-                    child: Text('CREATE FREE ACCOUNT'),
-                    color: Colors.blue[700],
-                    textColor: Colors.white,
-                    elevation: 5,
-                    padding: EdgeInsets.symmetric(vertical: size.getWidthPx(10), horizontal: size.getWidthPx(24)),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(50),
-                    ),
-                    onPressed: (){
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignUpPage()));
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignUpPage()));
                     },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.blue[700],
+                      elevation: 5,
+                      padding: EdgeInsets.symmetric(
+                          vertical: size.getWidthPx(10),
+                          horizontal: size.getWidthPx(24)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(50),
+                      ),
+                    ),
+                    child: Text('CREATE FREE ACCOUNT'),
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(0,size.getWidthPx(5),0,size.hp(6.5)),
-                  child: RaisedButton(
-                    child: Text('SIGN IN'),
-                    color: Colors.white,
-                    textColor: Colors.blue[700],
-                    elevation: 5,                
-                    padding: EdgeInsets.symmetric(vertical: size.getWidthPx(8), horizontal: size.getWidthPx(70)),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(50),
-                    ),
-                    onPressed: (){
-                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                  padding: EdgeInsets.fromLTRB(
+                      0, size.getWidthPx(5), 0, size.hp(6.5)),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => LoginPage()));
                     },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.blue[700],
+                      backgroundColor: Colors.white,
+                      elevation: 5,
+                      padding: EdgeInsets.symmetric(
+                          vertical: size.getWidthPx(8),
+                          horizontal: size.getWidthPx(70)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
+                    child: Text('SIGN IN'),
                   ),
                 ),
               ],

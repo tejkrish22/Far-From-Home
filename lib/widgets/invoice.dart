@@ -15,11 +15,11 @@ import 'invoice_viewer.dart';
 class Invoice extends StatefulWidget {
   @override
   InvoiceState createState() {
-    return InvoiceState(payment,owner);
+    return InvoiceState(payment, owner);
   }
 
-  var payment,owner;
-  Invoice(this.payment,this.owner);
+  var payment, owner;
+  Invoice(this.payment, this.owner);
 }
 
 class InvoiceState extends State<Invoice> {
@@ -29,15 +29,17 @@ class InvoiceState extends State<Invoice> {
   File file;
 
   String _filename = "invoice_pay_DQ7WtrNcx5WK58";
-  
-  var payment,owner;
-  InvoiceState(this.payment,this.owner);
+
+  var payment, owner;
+  InvoiceState(this.payment, this.owner);
 
   Future<void> _printPdf() async {
     final bool result = await Printing.layoutPdf(
         onLayout: (PdfPageFormat format) async =>
-            (await generateDocument(format,payment,owner)).save());
-    result ? Fluttertoast.showToast(msg: 'Invoice Downloaded Successfully'): null;
+            (await generateDocument(format, payment, owner)).save());
+    result
+        ? Fluttertoast.showToast(msg: 'Invoice Downloaded Successfully')
+        : null;
     //result ? Navigator.push(context,MaterialPageRoute(builder: (_) => SearchPage())): null;
   }
 
@@ -48,7 +50,8 @@ class InvoiceState extends State<Invoice> {
 
     // TODO Reset the function to writeAsBytes
     //await file.writeAsBytes(await generateDocument(PdfPageFormat.a4,payment,owner).save());
-    final pdf.Document document = await generateDocument(PdfPageFormat.a4,payment,owner);
+    final pdf.Document document =
+        await generateDocument(PdfPageFormat.a4, payment, owner);
     file.writeAsString(document.toString());
 
     Navigator.push<dynamic>(
@@ -62,7 +65,8 @@ class InvoiceState extends State<Invoice> {
 
   Future<void> _sharePdf() async {
     print('Share ...');
-    final pdf.Document document = await generateDocument(PdfPageFormat.a4,payment,owner);
+    final pdf.Document document =
+        await generateDocument(PdfPageFormat.a4, payment, owner);
 
     // Calculate the widget center for iPad sharing popup position
     final RenderBox referenceBox =
@@ -89,8 +93,9 @@ class InvoiceState extends State<Invoice> {
             backgroundColor: colorCurve,
             leading: IconButton(
               icon: Icon(Icons.close),
-              onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (_) => SearchPage()));
+              onPressed: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => SearchPage()));
               },
             ),
           ),
@@ -107,7 +112,7 @@ class InvoiceState extends State<Invoice> {
                     width: size.wp(70),
                     height: size.wp(70),
                     child: Image.asset(
-                      'assets/icons/success.png',  
+                      'assets/icons/success.png',
                     ),
                   ),
                   Align(
@@ -115,11 +120,10 @@ class InvoiceState extends State<Invoice> {
                     child: Text(
                       'Payment Successfull',
                       style: TextStyle(
-                        fontFamily: 'Ex02',
-                        fontSize: 24,
-                        color: Colors.green[800],
-                        fontWeight: FontWeight.bold
-                      ),
+                          fontFamily: 'Ex02',
+                          fontSize: 24,
+                          color: Colors.green[800],
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                   SizedBox(
@@ -143,32 +147,50 @@ class InvoiceState extends State<Invoice> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 67),
-                        child: RaisedButton(
-                            color: Colors.green[800],
-                            textColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 67),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.green[800],
+                              onPrimary: Colors.white,
+                            ),
+                            onPressed: _printPdf,
                             child: Row(
                               children: <Widget>[
-                                Icon(Icons.file_download,color: Colors.white,),
-                                SizedBox(width: 10,),
+                                Icon(
+                                  Icons.file_download,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
                                 Text('Print Document'),
                               ],
-                            ), onPressed: _printPdf),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 67),
-                        child: RaisedButton(
-                            color: Colors.green[800],
-                            key: shareWidget,
-                            textColor: Colors.white,
-                            child: Row(
-                              children: <Widget>[
-                                Icon(Icons.share,color: Colors.white,),
-                                SizedBox(width: 10,),
-                                Text('Share Document'),
-                              ],
                             ),
-                            onPressed: _sharePdf),
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 67),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.green[800],
+                            onPrimary: Colors.white,
+                          ),
+                          key: shareWidget,
+                          onPressed: _sharePdf,
+                          child: Row(
+                            children: <Widget>[
+                              Icon(
+                                Icons.share,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text('Share Document'),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -176,7 +198,7 @@ class InvoiceState extends State<Invoice> {
                     height: size.hp(18),
                   ),
                 ],
-              ), 
+              ),
             ),
           ),
         ));

@@ -8,7 +8,7 @@ import 'Constants.dart';
 class Utils {
   static Future<bool> checkConnection() async {
     ConnectivityResult connectivityResult =
-    await (Connectivity().checkConnectivity());
+        await (Connectivity().checkConnectivity());
     if ((connectivityResult == ConnectivityResult.mobile) ||
         (connectivityResult == ConnectivityResult.wifi)) {
       return true;
@@ -16,7 +16,8 @@ class Utils {
       return false;
     }
   }
-  static bool isAndroidPlatform(){
+
+  static bool isAndroidPlatform() {
     if (Platform.isAndroid) {
       return true;
       // Android-specific code
@@ -26,31 +27,33 @@ class Utils {
     }
   }
 
-
-
-  static void showAlert(
-      BuildContext context, String title, String text, VoidCallback onPressed,bool cancelable) {
-    var alert = Utils.isAndroidPlatform() ? AlertDialog: CupertinoAlertDialog (
-
-      title: Text(title,overflow: TextOverflow.ellipsis,),
-
-      content: SingleChildScrollView(
-        child: ListBody(
-          children: <Widget>[
-            Text(text),
-          ],
-        ),
-      ),
-
-      actions: <Widget>[
-        Utils.isAndroidPlatform()?FlatButton:CupertinoDialogAction(
-            onPressed: onPressed,
-            child: Text(
-              "OK",
-              style: TextStyle(color: Constants.clr_blue),
-            ))
-      ],
-    );
+  static void showAlert(BuildContext context, String title, String text,
+      VoidCallback onPressed, bool cancelable) {
+    var alert = Utils.isAndroidPlatform()
+        ? AlertDialog
+        : CupertinoAlertDialog(
+            title: Text(
+              title,
+              overflow: TextOverflow.ellipsis,
+            ),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text(text),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              Utils.isAndroidPlatform()
+                  ? TextButton
+                  : CupertinoDialogAction(
+                      onPressed: onPressed,
+                      child: Text(
+                        "OK",
+                        style: TextStyle(color: Constants.clr_blue),
+                      ))
+            ],
+          );
 
     showDialog(
         context: context,
@@ -70,18 +73,20 @@ class Utils {
         ),
       ),
       actions: <Widget>[
-        FlatButton(
-            onPressed: onPressed,
-            child: Text(
-              "OK",
-              style: TextStyle(color: Colors.black87),
-            )),
-        FlatButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              "Cancel",
-              style: TextStyle(color: Constants.clr_blue),
-            ))
+        TextButton(
+          onPressed: onPressed,
+          child: Text(
+            "OK",
+            style: TextStyle(color: Colors.black87),
+          ),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(
+            "Cancel",
+            style: TextStyle(color: Constants.clr_blue),
+          ),
+        )
       ],
     );
 
@@ -92,9 +97,7 @@ class Utils {
         });
   }
 
-
-  static int getColorHexFromStr(String colorStr)
-  {
+  static int getColorHexFromStr(String colorStr) {
     colorStr = "FF" + colorStr;
     colorStr = colorStr.replaceAll("#", "");
     int val = 0;
@@ -115,6 +118,4 @@ class Utils {
     }
     return val;
   }
-
-
 }

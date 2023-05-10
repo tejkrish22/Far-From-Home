@@ -246,21 +246,25 @@ class _WallState extends State<Wall> {
                           value.isEmpty ? 'Pin Code is required' : null,
                     ),
                     Align(
-                        alignment: Alignment.bottomRight,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 20.0),
-                          child: RaisedButton(
-                            onPressed: validateAndSave,
-                            child: Text(
-                              'Next',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            elevation: 4.0,
-                            color: Colors.blue[700],
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(30.0)),
+                      alignment: Alignment.bottomRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 20.0),
+                        child: ElevatedButton(
+                          onPressed: validateAndSave,
+                          child: Text(
+                            'Next',
+                            style: TextStyle(color: Colors.white),
                           ),
-                        )),
+                          style: ElevatedButton.styleFrom(
+                            elevation: 4.0,
+                            backgroundColor: Colors.blue[700],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -742,21 +746,25 @@ class _InteState extends State<Inte> {
                     ), //ends
 
                     Align(
-                        alignment: Alignment.bottomRight,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: RaisedButton(
-                            onPressed: validateAndSave,
-                            child: Text(
-                              'Next',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            elevation: 4.0,
-                            color: Colors.blue[700],
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(30.0)),
+                      alignment: Alignment.bottomRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: ElevatedButton(
+                          onPressed: validateAndSave,
+                          child: Text(
+                            'Next',
+                            style: TextStyle(color: Colors.white),
                           ),
-                        )),
+                          style: ElevatedButton.styleFrom(
+                            elevation: 4.0,
+                            backgroundColor: Colors.blue[700],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -1364,21 +1372,25 @@ class _Finalfmstate extends State<Finalfm> {
                       height: 20,
                     ),
                     Align(
-                        alignment: Alignment.bottomRight,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: RaisedButton(
-                            onPressed: validateAndSave,
-                            child: Text(
-                              'Next',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            elevation: 6.0,
-                            color: Colors.blue[700],
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(30.0)),
+                      alignment: Alignment.bottomRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: ElevatedButton(
+                          onPressed: validateAndSave,
+                          child: Text(
+                            'Next',
+                            style: TextStyle(color: Colors.white),
                           ),
-                        )),
+                          style: ElevatedButton.styleFrom(
+                            elevation: 6.0,
+                            backgroundColor: Colors.blue[700],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -1514,7 +1526,8 @@ void createRecord(context) async {
     'propertyType': _propert,
     'preferedType': _preferedType
   };
-  ref = await databaseReference.collection("House")
+  ref = await databaseReference
+      .collection("House")
       // .document("1")
       .add({
     'Address': address,
@@ -1558,7 +1571,7 @@ class ChoiceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle textStyle = Theme.of(context).textTheme.display1;
+    final TextStyle textStyle = Theme.of(context).textTheme.titleLarge;
     return Card(
       color: Colors.white,
       child: Center(
@@ -1612,7 +1625,9 @@ class _MultiImageState extends State<MultiImage> {
     File file = new File(t);
     filePath = '${DateTime.now()}.png';
     FirebaseStorage storage = FirebaseStorage.instance;
-    Reference ref = storage.refFromURL('gs://farfromhome-2019.appspot.com/').child(filePath);
+    Reference ref = storage
+        .refFromURL('gs://farfromhome-2019.appspot.com/')
+        .child(filePath);
     UploadTask task = ref.putFile(file);
     TaskSnapshot storageTaskSnapshot = await task.whenComplete(() => null);
     String url = await storageTaskSnapshot.ref.getDownloadURL();
